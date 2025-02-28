@@ -17,7 +17,7 @@ This repository contains a set of **batch and vbs scripts** designed for fun.
 🔒 **Locker.bat** – Creates a **secure folder** named `Locker`:  
 - Add files inside.  
 - Run the script again and press **Y** to make the folder **disappear**.  
-- Clicking it again prompts for a **password**; (default is 1234) once entered, it **unlocks the folder** and reveals its contents.  
+- Clicking it again prompts for a **password** (default is 1234); once entered, it **unlocks the folder** and reveals its contents.  
 
 🟢 **Matrix.bat** – A **terrible** attempt to simulate the **Matrix Rain Effect** in the command prompt.  
 
