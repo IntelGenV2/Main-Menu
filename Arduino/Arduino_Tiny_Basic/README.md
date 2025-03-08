@@ -165,28 +165,23 @@ Below is a **concise** list of typical Tiny BASIC commands supported in this pro
     - `POKE` writes a value to a memory address.  
     - `PEEK` reads a value from a memory address.  
 
-15. **`OUT` / `IN`** *(If port I/O is enabled)*  
-    - `OUT` sends a value to a port.  
-    - `IN` reads a value from a port.  
-
-16. **EEPROM Commands** *(If implemented)*  
+15. **EEPROM Commands**
     - **`ESAVE`** – Saves the current program to EEPROM.  
     - **`ELOAD`** – Loads the previously saved program from EEPROM.  
 
-17. **Custom Sound or Graphics Commands** *(If your code provides them)*  
+16. **Custom Sound or Graphics Commands** *(If your code provides them)*  
     - Example:  
       ```basic
       SOUND 440, 10
       PLOT X, Y
       ```
-
----
-
-## Example
-
-```basic
-10 CLS
-20 PRINT "HELLO FROM TINY BASIC!"
-30 INPUT A
-40 IF A > 10 THEN PRINT "VALUE IS GREATER THAN 10"
-50 END
+17. **Write / Read to Pins**
+    - **`DWRITE` / `DREAD` / `AWRITE` / `AREAD`**
+    - Controls pins from the command prompt
+    - Example:
+      ```basic
+      DWRITE 10, HIGH
+      DWRITE 10, LOW
+      ```
+18. **Change Text Color**
+    - **`SHIFT + &`**
