@@ -28,7 +28,7 @@ These resources provide detailed instructions for building your own **VGA-based 
 ### 🔢 **Tiny BASIC 2**  
 - An **enhanced version** with **improved command support** and **graphics capabilities**.  
 - Expanded compatibility with **ESP32 and FabGL-based systems**.
-- Designed for **TTGO VGA MINI32 V1.4 → [Amazon](https://www.amazon.ca/VGA32-V1-4-Controller-Keyboard-Graphics-Terminal/dp/B0CP79S9YZ) Canada...
+- Designed for **TTGO VGA MINI32** V1.4 → [Amazon](https://www.amazon.ca/VGA32-V1-4-Controller-Keyboard-Graphics-Terminal/dp/B0CP79S9YZ) Canada...
 
 ---
 
