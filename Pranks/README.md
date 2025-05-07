@@ -23,7 +23,7 @@ This repository contains a set of **batch and vbs scripts** designed for fun.
 
 👻 **Messages.vbs** – **Fake hacking alert** that makes it seem like your computer is under attack. (Safe)
 
-🚨 **Payload.ps1** – **Crash exploit in Windows** that can cripple your system within a few minutes (Somewhat safe, could make you computer vulnerable)
+💾 **Payload.ps1** – **Crash exploit in Windows** that can cripple your system within a few minutes (Somewhat safe, could make you computer vulnerable)
 ---
 
 ⚠ **Warning:** Some of these scripts can cause your system to become unresponsive, require a restart, or become vulnerable. **Use at your own risk!** 
