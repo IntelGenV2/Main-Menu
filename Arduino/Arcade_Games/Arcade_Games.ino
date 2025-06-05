@@ -221,7 +221,7 @@ byte iDel;
 byte jDel; 
 byte ballXhit; 
 byte ballYhit; 
-static const float pi PROGMEM = 3.1415296;
+static const float pi PROGMEM = 3.1415926;
 byte nBricks; 
 byte color; 
 static const float speedIncrement PROGMEM = 1.259921; //cubic root of two. Every three levels speed doubles --------------------
