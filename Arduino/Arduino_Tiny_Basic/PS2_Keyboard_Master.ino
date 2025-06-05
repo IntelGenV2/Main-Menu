@@ -54,7 +54,7 @@ char eliminateCompileErrors = 1;  // fix to suppress arduino build errors
 //#undef ENABLE_EEPROM
 
 // Sometimes, we connect with a slower device as the console.
-// Set your console D0/D1 baud rate here (9600 baud default)
+// Set your console D0/D1 baud rate here (4800 baud default)
 //#define kConsoleBaud 9600
 #define kConsoleBaud 4800 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
