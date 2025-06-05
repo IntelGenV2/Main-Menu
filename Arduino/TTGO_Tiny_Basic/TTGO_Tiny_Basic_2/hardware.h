@@ -1201,7 +1201,7 @@
 #define FNLIMIT 64
 #elif defined(ARDUINO_ARCH_XMC)
 #define FNLIMIT 64
-#elif defined(ARDUINO_ARCH_SMT32)
+#elif defined(ARDUINO_ARCH_STM32)
 #define FNLIMIT 128
 #elif defined(ARDUINO_ARCH_RENESAS)
 #define FNLIMIT 32
