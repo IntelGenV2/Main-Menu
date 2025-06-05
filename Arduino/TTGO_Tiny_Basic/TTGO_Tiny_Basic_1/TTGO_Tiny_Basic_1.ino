@@ -10,7 +10,7 @@
  *
  *	Author: Stefan Lenz, sl001@serverfabrik.de
  *
- *	The first set of definions define the target.
+ *	The first set of definitions define the target.
  *	- MINGW switches on Windows calls - this is the mingw.org version 
  *  _ MINGW64 like MINGW but with the mingw 64 support 
  *	- MSDOS for MSDOS file access.
