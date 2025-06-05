@@ -33,8 +33,8 @@ uint8_t bsystype = SYSTYPE_RP2040;
 uint8_t bsystype = SYSTYPE_SAM;
 #elif defined(ARDUINO_ARCH_XMC)
 uint8_t bsystype = SYSTYPE_XMC;
-#elif defined(ARDUINO_ARCH_SMT32)
-uint8_t bsystype = SYSTYPE_SMT32;
+#elif defined(ARDUINO_ARCH_STM32)
+uint8_t bsystype = SYSTYPE_STM32;
 #elif defined(ARDUINO_ARCH_RENESAS)
 uint8_t bsystype = SYSTYPE_NRENESA;
 #else

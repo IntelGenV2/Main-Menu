@@ -30,7 +30,7 @@
 #define SYSTYPE_RP2040  4
 #define SYSTYPE_SAM     5
 #define SYSTYPE_XMC		6
-#define SYSTYPE_SMT32	7
+#define SYSTYPE_STM32	7
 #define SYSTYPE_NRENESA 8
 #define SYSTYPE_POSIX	32
 #define SYSTYPE_MSDOS	33
