@@ -1,6 +1,8 @@
 # Laurence’s Vintage Computing Projects
 
-Welcome to my GitHub repository! Here, you’ll find various resources related to vintage computing, retro gaming, Arduino projects, and pranks/hacks.
+Welcome to my GitHub repository! Here, you’ll find various resources related to vintage computing, retro gaming, Arduino projects, pranks/hacks, and my very own useless OS.
+
+My current focus is on the unusual OS and a game called "System Revival" which will be hosting this OS.
 
 ---
 
