@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
 BOSCHOS v0.5 - Text-based OS Simulator
-Contexts: CORE, FS (BOSCHOS FS), WFE (Windows File Explorer simulation)
-Interactive CLI; run from a terminal to keep it open.
-Filenames displayed with '*' for extension separator, stored with '.'.
+
 """
 import os
 import sys
@@ -67,11 +65,11 @@ def handle_core():
     low = cmd.lower()
     if low == 'des - fs':
         loading('Entering File System')
-        print('[ ACCESS ] → Entered BOSCHOS File System')
+        print('[ ACCESS ] → Entered BOSCHOS File System Context')
         current_context = 'FS'
     elif low == 'des - wfe':
-        loading('Entering Windows FS')
-        print('[ ACCESS ] → Entered Windows File Explorer')
+        loading('Entering Windows File Explorer')
+        print('[ ACCESS ] → Entered Windows File Explorer Context')
         current_context = 'WFE'
     else:
         print('Unknown CORE command')
@@ -84,7 +82,7 @@ def handle_fs():
 
     if low == 'des - core':
         loading('Returning to CORE')
-        print('[ CORE ] → Back to CORE')
+        print('[ CORE ] → Back to CORE Context')
         current_context = 'CORE'
         return
 
@@ -106,8 +104,8 @@ def handle_fs():
         return
 
     # Peek at a location without entering
-    if low.startswith('/loc -n '):
-        urn = cmd.split('/loc -n',1)[1].strip()
+    if low.startswith('/loc -p '):
+        urn = cmd.split('/loc -p',1)[1].strip()
         path = urn_to_dir(urn)
         if not os.path.isdir(path):
             print(f'[ ERR ] → Location not found: {urn}')
@@ -119,7 +117,7 @@ def handle_fs():
 
     # Invalid loc command
     if low.startswith('/loc - '):
-        print('[ ERR ] → Invalid /loc command; use "/loc -e <URN>", "/loc -d", or "/loc -n <URN>"')
+        print('[ ERR ] → Invalid /loc command')
         return
 
     # Modification commands
@@ -179,7 +177,7 @@ def handle_wfe():
 
     if low == 'des - core':
         loading('Returning to CORE')
-        print('[ CORE ] → Back to CORE')
+        print('[ CORE ] → Back to CORE Context')
         current_context = 'CORE'
         return
 
@@ -207,8 +205,8 @@ def handle_wfe():
             for n in list_wfe(wfe_path): print(f'  • {n}')
         return
 
-    if low.startswith('/loc -n '):
-        urn = cmd.split('/loc -n',1)[1].strip()
+    if low.startswith('/loc -p '):
+        urn = cmd.split('/loc -p',1)[1].strip()
         path = urn.replace(':', os.sep)
         if not os.path.isdir(path):
             print(f'[ ERR ] → Path not found: {urn}')
@@ -218,7 +216,7 @@ def handle_wfe():
         return
 
     if low.startswith('/loc - '):
-        print('[ ERR ] → Invalid /loc command; use "/loc -e <P>", "/loc -d", or "/loc -n <P>"')
+        print('[ ERR ] → Invalid /loc command')
         return
 
     if low.startswith('/mod -'):
