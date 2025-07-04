@@ -1,0 +1,104 @@
+Getting Started
+1.	Install Python 3.
+2.	Place the entire BOSCHOS folder in your Documents directory.
+3.	Run core.py in CORE folder
+
+________________________________________
+
+
+CORE Context (CORE>)
+Switch between contexts:
+
+Command	        What it does
+des - fs	Enter File System context (FS>)
+des - wfe	Enter Windows File Explorer context (WFE>)
+des - sg	Enter Snake Game context (SG>)
+des - si	Enter System Information context (SI>)
+des - bp	Enter BASIC Interpreter context (BP>) not available
+
+Anything else at CORE> → [ ERR ] Unknown Core command
+if you are in a different context you can just type des - <context>
+
+________________________________________
+
+
+File System Context (FS>)
+Browse and modify:
+
+Command	                Action
+/loc -d	                Display current directory contents
+/loc -s <pattern>	Search for files/folders matching <pattern>
+/loc -e                 enter a location (default = base)
+/loc -p                 peek at a location but doesn't enter it
+
+/mod -c /name=<n> /loc=<URN> /type=chunk (folder)       Create a folder
+/mod -c /name=<n> /loc=<URN> /type=block (file)         Create a folder
+/mod -d /name=<n> /loc=<URN>	                        Delete a file or folder
+/mod -r /name=<old> /name2=<new> /loc=<URN>	        Rename <old> → <new>
+/mod -y /name=<n> /loc=<URN> /loc2=<URN>	        Copy file/folder
+/mod -m /name=<n> /loc=<URN> /loc2=<URN>	        Move file/folder
+/mod -e /name=<n> /loc=<URN>	                        Edit an existing text file with the internal editor
+
+Note: always supply both /name= and /loc= in any order.
+      eloc = entered location
+      URN is the full path of the location
+      A file has the name with a * separating the type (e.g. file*txt -> text file)
+
+________________________________________
+
+
+Windows File Explorer Context (WFE>)
+Commands are the same as File system but affect windows itself instead.
+
+________________________________________
+Snake Game Context (SG>)
+
+Command	        Action
+/run - sg	Launch the Snake Game
+
+________________________________________
+
+
+System Information Context (SI>)
+stats about BOSCHOS:
+
+Command	        Shows
+/info -o	OS version (v0.0.4.0)
+/info -c	CPU model & usage
+/info -r	RAM usage (out of 16 KB, tracks which modules you’ve accessed)
+/info -d	Disk usage (out of 1000 KB)
+/info -u	Uptime since starting BOSCHOS
+/info -t	Current local time
+________________________________________
+
+
+BASIC Interpreter Context (BP>)
+•	Placeholder until bp.py is provided.
+•	If missing, /edit -e will warn you to add bp.py.
+
+________________________________________
+
+
+Built-In Text Editor (invoked via /mod -e)
+
+Once you run:                              you’ll see:
+FS> /mod -e /name=foo*txt /loc=eloc        [ MOD ] → Editing "foo.txt" in <URN>
+
+The prompt changes to:
+EDIT>
+
+Editor Commands
+Command	             What it does
+/edit -i <n>	     Insert one line at position n
+/edit -ii	     Enter/exit multi-line insert mode; type -ii to stop
+/edit -d <n>	     Delete line n
+/edit -dd <n>-<m>    Delete lines n through m
+/edit -r <n>	     Replace line n with the next line you type
+/edit -rr <n>-<m>    Enter/exit multi-line replace mode: deletes lines n..m, then accepts new lines until -rr
+/edit -v <n>	     View a single line n
+/edit -vv <n>-<m>    View lines n through m
+/edit -vvv	     View entire doc, pausing every 20 lines (“press ‘v’ to continue”) any other key cancels it
+/edit -vvvv	     View entire doc in one go
+/edit -w	     Write changes & Quit editor
+________________________________________
+
