@@ -157,6 +157,7 @@
 <br>
 <br>
 <br>
+
 ## First Module Quests
 ### PSU Module
 - Dysfunction:
@@ -194,6 +195,7 @@
 <br>
 <br>
 <br>
+
 ## Orderless Module Quests (Can be done in your own order)
 ### CPU Module
 - Dysfunction:
@@ -276,6 +278,7 @@
 <br>
 <br>
 <br>
+
 ## PCI Module Quests (unlocked after PCI Module quest is finished)
 ### GPU Module
 - Dysfunction:
@@ -311,6 +314,7 @@
 <br>
 <br>
 <br>
+
 ## Persistent Quests
 ### PSU Module (Upgraded after every repaired or upgraded part)
 - Details for initial repair and upgrades found in First Quests section above
@@ -354,6 +358,7 @@
 <br>
 <br>
 <br>
+
 # Inventory System
 - Players collect artifacts and items throughout their journey:
 - Inventory expansion is planned to tie into RAM and HDD upgrades; detailed slot management is still TBD.
@@ -362,6 +367,7 @@
 <br>
 <br>
 <br>
+
 # Wishlist
 - I/O Module Quest
 - Network Module Quest
