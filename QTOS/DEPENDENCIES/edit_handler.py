@@ -6,7 +6,7 @@ from helpers import YELLOW, LIGHT_GREEN, RESET, RED, GREEN
 
 def edit_file(filepath, urn_label):
     """
-    Optimized text-based editor for BOSCHOS:
+    Optimized text-based editor for QTOS:
       [ MOD ] → Editing "<FILENAME>" in <URN>
     Commands (one flag per command):
       /edit -i  <n>        – insert one line at position n (only append at end)
