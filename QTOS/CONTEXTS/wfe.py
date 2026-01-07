@@ -35,7 +35,11 @@ def handle_wfe(wfe_path_ref):
                 print(f"{LIGHT_GREEN}[ DRIVE ] → Switched to {drive}:\\{RESET}")
             
             elif cmd.startswith('/run'):
-                exe = cmd.split(' ', 1)[1].strip()
+                parts = cmd.split(' ', 1)
+                if len(parts) < 2 or not parts[1].strip():
+                    print(f"{RED}[ ERR ] No filename provided{RESET}")
+                    continue
+                exe = parts[1].strip()
                 if wfe_path_ref[0]:
                     full_path = Path(wfe_path_ref[0]) / exe
                     if full_path.is_file():
