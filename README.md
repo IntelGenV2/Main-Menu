@@ -23,4 +23,4 @@ My current focus is on the unusual OS and a game called "System Revival" which w
 11. **ProDOS                                      (Apple //e)**
 12  **Kick Starter v2                             (Amiga 500)**
 13  **CBM                                         (Commodore 64)**
-14  **CBM                                         (Commodore VIC20**
+14  **CBM                                         (Commodore VIC20** 
