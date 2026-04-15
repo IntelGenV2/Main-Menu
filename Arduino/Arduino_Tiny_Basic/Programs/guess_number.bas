@@ -1,0 +1,19 @@
+10 REM ===== GUESS THE NUMBER =====
+20 REM Tiny Basic game - I pick 1-100, you guess
+30 PRINT "GUESS THE NUMBER (1-100)"
+40 PRINT ""
+50 S = RND(100)+1
+60 T = 0
+70 PRINT "Your guess?"
+80 INPUT G
+90 T = T+1
+100 IF G>S GOTO 130
+110 IF G<S GOTO 150
+120 PRINT "You got it in ";
+121 PRINT T;
+122 PRINT " tries"
+125 END
+130 PRINT "Lower!"
+140 GOTO 70
+150 PRINT "Higher!"
+160 GOTO 70
