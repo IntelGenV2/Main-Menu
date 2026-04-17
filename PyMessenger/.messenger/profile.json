@@ -3,9 +3,11 @@
   "user_id": "intelgen_v2",
   "server_url": "ws://127.0.0.1:8765",
   "friends": [
-    "Maurice"
+    "Maurice",
+    "friend1"
   ],
   "rooms": [
-    "Gaming"
+    "Gaming",
+    "lobby"
   ]
 }
