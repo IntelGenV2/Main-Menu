@@ -1,51 +1,61 @@
 # PyMessenger
 
-PyMessenger is a Python desktop messaging prototype with a PySide6 GUI, lightweight signaling, and TOFU-based key exchange for encrypted direct messages.
+PyMessenger is a desktop chat app with a PySide6 GUI, a lightweight signaling server, and encrypted direct messaging with TOFU key trust.
 
-## Architecture
+## How server and clients work
 
-- Client app: `messenger_app/`
-- Signaling service: `signaling_service/server.py`
-- Build scripts: `build/windows/build.ps1`
+- **Server** (`signaling_service/server.py`): message router. It helps clients find each other and pass packets. It does not manage accounts.
+- **Client** (`messenger_app/`): chat UI + your local profile/keys.
+- **Identity**: each user sets a `User ID` in setup. Friends exchange this ID.
+- **Encryption**: direct messages are encrypted end-to-end after key exchange. First key is trusted (TOFU); changed keys are flagged.
 
-The signaling service only routes messages and key-exchange payloads. Direct message content is encrypted end-to-end once peers exchange keys.
+## First-time setup
 
-## Security model (TOFU)
+1. Open `PyMessenger`.
+2. Run `python -m pip install -r requirements.txt` once.
+3. Start server (for local test):
+   - `py -3 signaling_service/server.py`
+4. Start client:
+   - `py -3 -m messenger_app.main`
+5. Setup dialog appears:
+   - Enter display name
+   - Enter user ID (example: `lawbo`)
+   - Enter server URL (example local: `ws://127.0.0.1:8765`)
+6. Click `Connect`.
 
-- Each user gets a local X25519 identity keypair on first run.
-- First-seen peer key is trusted automatically (TOFU).
-- If a peer key changes later, trust state becomes `key_changed` and the UI warns you.
-- You can explicitly trust a changed key using the `Trust Key Change` control in direct chat mode.
+Profile is saved in `.messenger/profile.json`, so next launch does not need terminal arguments.
 
-## Run from source
+## One-click launchers
 
-1. `cd PyMessenger`
-2. `python -m pip install -r requirements.txt`
-3. Start signaling service:
-   - `python signaling_service/server.py`
-4. Start one or more clients:
-   - `python messenger_app/main.py --user user1 --server ws://127.0.0.1:8765`
-   - `python messenger_app/main.py --user user2 --server ws://127.0.0.1:8765`
+- `run_client.pyw`: launches GUI client without terminal.
+- `run_server.pyw`: launches server without terminal.
 
-## Remote friends setup recommendation
+Double-clicking these files works after Python and dependencies are installed.
 
-For friends in different locations, run signaling on an internet-reachable machine:
+## Add a friend and start messaging
 
-- Best: small VPS/VM with public IP/domain.
-- Alternatives: a friend's PC with port-forward + dynamic DNS, or a tunnel service.
+1. Share your ID shown as `My ID` in the right panel.
+2. Ask your friend for their ID.
+3. In `Start Direct Chat`, enter your friend's ID and click `Add Direct`.
+4. The app auto-sends a key exchange to that friend.
+5. Your friend does the same for your ID.
+6. Start sending direct messages.
 
-All of these keep the same client code path; only the `--server` URL changes.
+If trust shows `key_changed`, use `Trust Key Change` only if you verified with your friend out of band.
+
+## Local and remote testing
+
+### Local (same PC or same network)
+
+- Use server URL like `ws://127.0.0.1:8765` (same PC) or `ws://<LAN-IP>:8765` (same LAN).
+
+### Remote (different locations)
+
+- Run one signaling server on an internet-reachable host.
+- Recommended: small VPS/VM with public IP/domain.
+- Both clients set server URL to that host, e.g. `ws://your-domain-or-ip:8765`.
 
 ## Build executable (Windows)
 
 - Run: `PyMessenger/build/windows/build.ps1`
 - Output: `dist/PyMessenger/`
-
-## Current feature set
-
-- Direct and room chat
-- Presence and typing indicators
-- Read receipts
-- File transfer (chunked)
-- Encrypted local history store
-- Encrypted direct messaging with TOFU key exchange

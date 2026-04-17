@@ -7,6 +7,7 @@ from pathlib import Path
 from threading import Thread
 
 from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -24,6 +25,7 @@ from PySide6.QtWidgets import (
 from messenger_app.net.client import MessengerClient
 from messenger_app.net.file_transfer import build_transfer_id, iter_chunks_b64, validate_file
 from messenger_app.net.protocol import Envelope
+from messenger_app.storage.settings import load_settings, save_settings
 from messenger_app.ui.widgets.chat_widgets import ConversationList
 
 
@@ -35,12 +37,13 @@ class UiBus(QObject):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, server_url: str, user_id: str) -> None:
+    def __init__(self, server_url: str, user_id: str, display_name: str) -> None:
         super().__init__()
         self.server_url = server_url
         self.user_id = user_id
+        self.display_name = display_name
         self.bus = UiBus()
-        self.setWindowTitle(f"PyMessenger - {user_id}")
+        self.setWindowTitle(f"PyMessenger - {display_name} ({user_id})")
         self.resize(1100, 720)
 
         self.client_loop = asyncio.new_event_loop()
@@ -98,6 +101,11 @@ class MainWindow(QMainWindow):
         right = QWidget()
         right_layout = QVBoxLayout(right)
         right_layout.addWidget(QLabel("Details / Settings"))
+        self.my_id_label = QLabel(f"My ID: {self.user_id}")
+        self.copy_id_btn = QPushButton("Copy My ID")
+        right_layout.addWidget(self.my_id_label)
+        right_layout.addWidget(self.copy_id_btn)
+        right_layout.addWidget(QLabel(f"Display Name: {self.display_name}"))
         self.target_input = QLineEdit("lobby")
         self.target_input.setReadOnly(True)
         self.mode_info = QLabel("Mode: room")
@@ -105,6 +113,8 @@ class MainWindow(QMainWindow):
         self.new_room_input.setPlaceholderText("new room id")
         self.new_direct_input = QLineEdit()
         self.new_direct_input.setPlaceholderText("direct user id")
+        self.server_input = QLineEdit(self.server_url)
+        self.save_server_btn = QPushButton("Save Server URL")
         self.trust_label = QLabel("Trust: n/a")
         self.connect_btn = QPushButton("Connect")
         self.join_btn = QPushButton("Join Room")
@@ -121,6 +131,9 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(QLabel("Start Direct Chat"))
         right_layout.addWidget(self.new_direct_input)
         right_layout.addWidget(self.add_direct_btn)
+        right_layout.addWidget(QLabel("Server URL"))
+        right_layout.addWidget(self.server_input)
+        right_layout.addWidget(self.save_server_btn)
         right_layout.addWidget(self.trust_label)
         right_layout.addWidget(self.key_exchange_btn)
         right_layout.addWidget(self.trust_key_btn)
@@ -148,6 +161,8 @@ class MainWindow(QMainWindow):
         self.join_btn.clicked.connect(self.join_room)
         self.add_room_btn.clicked.connect(self.add_room)
         self.add_direct_btn.clicked.connect(self.add_direct)
+        self.copy_id_btn.clicked.connect(self.copy_my_id)
+        self.save_server_btn.clicked.connect(self.save_server_url)
         self.key_exchange_btn.clicked.connect(self.send_key_exchange)
         self.trust_key_btn.clicked.connect(self.trust_key_change)
         self.conversations.itemSelectionChanged.connect(self.select_conversation)
@@ -222,6 +237,7 @@ class MainWindow(QMainWindow):
         self.conversations.add_conversation(f"direct:{user_id}")
         self.new_direct_input.clear()
         self._set_target(user_id, False)
+        self.send_key_exchange()
 
     def select_conversation(self) -> None:
         item = self.conversations.currentItem()
@@ -259,6 +275,22 @@ class MainWindow(QMainWindow):
             return
         asyncio.run_coroutine_threadsafe(self.client.send_key_exchange(target), self.client_loop)
         self.timeline.append(f"[trust] sent key to {target}")
+
+    def copy_my_id(self) -> None:
+        QGuiApplication.clipboard().setText(self.user_id)
+        self.status_label.setText("Copied your user ID to clipboard")
+
+    def save_server_url(self) -> None:
+        new_url = self.server_input.text().strip()
+        if not (new_url.startswith("ws://") or new_url.startswith("wss://")):
+            QMessageBox.warning(self, "Server URL", "Use ws:// or wss:// URL.")
+            return
+        self.server_url = new_url
+        self.client.server_url = new_url
+        settings = load_settings()
+        settings["server_url"] = new_url
+        save_settings(settings)
+        self.timeline.append(f"[settings] server URL saved: {new_url}")
 
     def trust_key_change(self) -> None:
         target, is_room = self._target()
