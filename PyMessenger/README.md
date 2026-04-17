@@ -1,6 +1,6 @@
-# PyMessenger
+# Intel Byte 256
 
-PyMessenger is a desktop chat app with a PySide6 GUI, a lightweight signaling server, and encrypted direct messaging with TOFU key trust.
+Intel Byte 256 is a desktop chat app with a PySide6 GUI, a lightweight signaling server, and encrypted direct messaging with TOFU key trust.
 
 ## How server and clients work
 
@@ -11,7 +11,7 @@ PyMessenger is a desktop chat app with a PySide6 GUI, a lightweight signaling se
 
 ## First-time setup
 
-1. Open `PyMessenger`.
+1. Open `Intel Byte 256` (project folder currently named `PyMessenger`).
 2. Run `python -m pip install -r requirements.txt` once.
 3. Start server (for local test):
    - `py -3 signaling_service/server.py`
@@ -58,4 +58,4 @@ If trust shows `key_changed`, use `Trust Key Change` only if you verified with y
 ## Build executable (Windows)
 
 - Run: `PyMessenger/build/windows/build.ps1`
-- Output: `dist/PyMessenger/`
+- Output: `dist/IntelByte256/`

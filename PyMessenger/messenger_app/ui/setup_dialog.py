@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
 class SetupDialog(QDialog):
     def __init__(self, display_name: str, user_id: str, server_url: str, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("PyMessenger Setup")
+        self.setWindowTitle("Intel Byte 256 Setup")
         self.resize(420, 220)
 
         layout = QVBoxLayout(self)

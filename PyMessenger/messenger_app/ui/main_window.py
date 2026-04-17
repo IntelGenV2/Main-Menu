@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         self.user_id = user_id
         self.display_name = display_name
         self.bus = UiBus()
-        self.setWindowTitle(f"PyMessenger - {display_name} ({user_id})")
+        self.setWindowTitle(f"Intel Byte 256 - {display_name} ({user_id})")
         self.resize(1100, 720)
 
         self.client_loop = asyncio.new_event_loop()

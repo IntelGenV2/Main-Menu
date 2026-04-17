@@ -1,4 +1,4 @@
-"""Double-click launcher for PyMessenger client (no terminal window)."""
+"""Double-click launcher for Intel Byte 256 client (no terminal window)."""
 
 from messenger_app.main import main
 
