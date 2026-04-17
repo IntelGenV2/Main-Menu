@@ -13,7 +13,7 @@ from messenger_app.ui.main_window import MainWindow
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="PyMessenger desktop app")
+    parser = argparse.ArgumentParser(description="Intel Byte 256 desktop app")
     parser.add_argument("--server", default="", help="Signaling server websocket URL")
     parser.add_argument("--user", default="", help="User id for this client instance")
     parser.add_argument("--name", default="", help="Display name")

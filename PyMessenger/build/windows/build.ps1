@@ -13,9 +13,9 @@ Push-Location $ProjectRoot
 & $Python -m PyInstaller `
     --noconfirm `
     --windowed `
-    --name PyMessenger `
+    --name IntelByte256 `
     --paths . `
     messenger_app/main.py
 Pop-Location
 
-Write-Host "Build complete. Output is in dist/PyMessenger/"
+Write-Host "Build complete. Output is in dist/IntelByte256/"

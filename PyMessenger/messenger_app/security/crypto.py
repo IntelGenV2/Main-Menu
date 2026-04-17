@@ -57,7 +57,7 @@ def _session_key(private_key_b64: str, peer_public_key_b64: str) -> bytes:
     private_key = x25519.X25519PrivateKey.from_private_bytes(base64.b64decode(private_key_b64))
     peer_public = x25519.X25519PublicKey.from_public_bytes(base64.b64decode(peer_public_key_b64))
     shared_secret = private_key.exchange(peer_public)
-    return HKDF(algorithm=hashes.SHA256(), length=32, salt=None, info=b"pymessenger-direct-v1").derive(shared_secret)
+    return HKDF(algorithm=hashes.SHA256(), length=32, salt=None, info=b"intel-byte-256-direct-v1").derive(shared_secret)
 
 
 def encrypt_direct_payload(private_key_b64: str, peer_public_key_b64: str, payload: dict) -> dict:
