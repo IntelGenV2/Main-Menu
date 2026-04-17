@@ -3,26 +3,68 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime, timezone
 import json
+from pathlib import Path
 from typing import Dict, Set
+import uuid
 
 from websockets.asyncio.server import ServerConnection, serve
 
 
 CLIENTS: Dict[str, ServerConnection] = {}
-ROOMS: Dict[str, Set[str]] = {}
+KNOWN_USERS_PATH = Path(".messenger/server_users.json")
+ROOMS_PATH = Path(".messenger/server_rooms.json")
+
+
+def load_known_users() -> Dict[str, str]:
+    KNOWN_USERS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if KNOWN_USERS_PATH.exists():
+        try:
+            data = json.loads(KNOWN_USERS_PATH.read_text(encoding="utf-8"))
+            return {str(k): str(v) for k, v in data.items()}
+        except Exception:
+            return {}
+    return {}
+
+
+def save_known_users(data: Dict[str, str]) -> None:
+    KNOWN_USERS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    KNOWN_USERS_PATH.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
+def load_rooms() -> Dict[str, Set[str]]:
+    ROOMS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if ROOMS_PATH.exists():
+        try:
+            data = json.loads(ROOMS_PATH.read_text(encoding="utf-8"))
+            return {str(room_id): set(str(x) for x in members) for room_id, members in data.items()}
+        except Exception:
+            return {"lobby": set()}
+    return {"lobby": set()}
+
+
+def save_rooms() -> None:
+    ROOMS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    serializable = {room_id: sorted(list(members)) for room_id, members in ROOMS.items()}
+    ROOMS_PATH.write_text(json.dumps(serializable, indent=2), encoding="utf-8")
+
+
+ROOMS: Dict[str, Set[str]] = load_rooms()
+
+
+def server_message(message_type: str, sender_id: str, payload: dict) -> dict:
+    return {
+        "type": message_type,
+        "sender_id": sender_id,
+        "message_id": f"srv-{uuid.uuid4()}",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "payload": payload,
+    }
 
 
 async def broadcast_presence(user_id: str, online: bool) -> None:
-    payload = json.dumps(
-        {
-            "type": "presence",
-            "sender_id": user_id,
-            "message_id": f"presence-{user_id}-{int(asyncio.get_running_loop().time())}",
-            "timestamp": "",
-            "payload": {"online": online},
-        }
-    )
+    payload = json.dumps(server_message("presence", user_id, {"online": online}))
     stale: Set[str] = set()
     for peer_id, ws in CLIENTS.items():
         try:
@@ -58,6 +100,7 @@ async def route_message(sender_id: str, body: dict) -> None:
 
 
 async def handler(websocket: ServerConnection) -> None:
+    known_users = load_known_users()
     user_id: str | None = None
     try:
         async for raw in websocket:
@@ -66,21 +109,38 @@ async def handler(websocket: ServerConnection) -> None:
             if msg_type == "auth":
                 user_id = body.get("sender_id")
                 if not user_id:
-                    await websocket.send(json.dumps({"type": "error", "payload": {"reason": "missing sender_id"}}))
+                    await websocket.send(json.dumps(server_message("error", "server", {"reason": "missing sender_id"})))
                     continue
                 CLIENTS[user_id] = websocket
-                await websocket.send(json.dumps({"type": "ack", "payload": {"ok": True, "user_id": user_id}}))
+                display_name = body.get("payload", {}).get("display_name") or user_id
+                known_users[user_id] = str(display_name)
+                save_known_users(known_users)
+                await websocket.send(
+                    json.dumps(
+                        server_message(
+                            "ack",
+                            "server",
+                            {
+                                "ok": True,
+                                "user_id": user_id,
+                                "known_users": known_users,
+                                "rooms": sorted(list(ROOMS.keys())),
+                            },
+                        )
+                    )
+                )
                 await broadcast_presence(user_id, True)
                 continue
             if not user_id:
-                await websocket.send(json.dumps({"type": "error", "payload": {"reason": "auth required"}}))
+                await websocket.send(json.dumps(server_message("error", "server", {"reason": "auth required"})))
                 continue
             if msg_type == "room_join":
                 room_id = body.get("room_id")
                 if room_id:
                     ROOMS.setdefault(room_id, set()).add(user_id)
+                    save_rooms()
                     await websocket.send(
-                        json.dumps({"type": "ack", "payload": {"joined_room": room_id}})
+                        json.dumps(server_message("ack", "server", {"joined_room": room_id}))
                     )
                 continue
             await route_message(user_id, body)
@@ -89,6 +149,7 @@ async def handler(websocket: ServerConnection) -> None:
             CLIENTS.pop(user_id, None)
             for members in ROOMS.values():
                 members.discard(user_id)
+            save_rooms()
             await broadcast_presence(user_id, False)
 
 

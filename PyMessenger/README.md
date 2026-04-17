@@ -43,6 +43,18 @@ Double-clicking these files works after Python and dependencies are installed.
 
 If trust shows `key_changed`, use `Trust Key Change` only if you verified with your friend out of band.
 
+## How to know it is working
+
+- **Server running:** `run_server.pyw` opens a small window showing `Server state: running` and writes logs to `.messenger/server.log`.
+- **Server memory:** known user IDs/display names are saved in `.messenger/server_users.json` on the server host and reloaded next launch.
+- **Room memory:** server room list is saved in `.messenger/server_rooms.json` and restored on next server launch.
+- **Client memory:** your friend list and room list are saved in `.messenger/profile.json`.
+- **Client connected:** the status badge in the right panel turns `Connected`, timeline shows `[connect] Connected to signaling server.`
+- **Room joined:** timeline shows `[room] Joined room: <room-id>`.
+- **Friend added:** timeline shows `[friend] Added direct chat target: <friend-id>`.
+- **Key exchange status:** direct chat row gets a state badge like `added`, `key_sent`, `key_received`, `trusted`, or `key_changed`.
+- **Ready to message:** once key exchange is trusted, direct messages stop showing key errors and send normally.
+
 ## Local and remote testing
 
 ### Local (same PC or same network)
@@ -59,3 +71,22 @@ If trust shows `key_changed`, use `Trust Key Change` only if you verified with y
 
 - Run: `PyMessenger/build/windows/build.ps1`
 - Output: `dist/IntelByte256/`
+
+## Troubleshooting
+
+- **Buttons seem to do nothing**
+  - Check server state badge first.
+  - If `Disconnected` or `Error`, click `Connect` and read timeline errors.
+  - Some actions are disabled until connected.
+- **`run_server.pyw` opens then closes**
+  - Install dependencies first: `py -3 -m pip install -r requirements.txt`
+  - Check `.messenger/server.log` for startup errors.
+- **Cannot message friend**
+  - Both clients must use the same server URL.
+  - Both sides must add each other by User ID and exchange keys.
+  - If state is `key_changed`, verify identity then click `Trust Key Change`.
+- **Still getting protocol field errors**
+  - Stop all old server/client instances.
+  - Relaunch using updated code so all server `ack/error/presence` messages include full envelope fields.
+- **Auto-start local server**
+  - If server URL is local (`ws://127.0.0.1:8765`/`localhost`) and connect fails, client attempts to launch `run_server.pyw` then retries.

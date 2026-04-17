@@ -20,9 +20,17 @@ StatusCallback = Callable[[str], Awaitable[None]]
 
 
 class MessengerClient:
-    def __init__(self, server_url: str, user_id: str, history_path: Path, history_secret: str) -> None:
+    def __init__(
+        self,
+        server_url: str,
+        user_id: str,
+        display_name: str,
+        history_path: Path,
+        history_secret: str,
+    ) -> None:
         self.server_url = server_url
         self.user_id = user_id
+        self.display_name = display_name
         self.history = HistoryStore(history_path, history_secret)
         self.identity = load_or_create_identity(user_id)
         self.trust_store = TrustStore(user_id)
@@ -37,17 +45,24 @@ class MessengerClient:
         self._incoming_meta: dict[str, dict] = {}
         self.download_dir = Path(".messenger/downloads")
         self.download_dir.mkdir(parents=True, exist_ok=True)
+        self.last_error: str = ""
+        self.known_users: dict[str, str] = {}
 
     async def _emit_status(self, text: str) -> None:
         if self.on_status:
             await self.on_status(text)
 
     async def connect(self) -> None:
+        self.last_error = ""
         self.ws = await connect(self.server_url)
         auth = make_envelope(
             "auth",
             self.user_id,
-            {"device": "desktop", "public_key_b64": self.identity["public_key_b64"]},
+            {
+                "device": "desktop",
+                "public_key_b64": self.identity["public_key_b64"],
+                "display_name": self.display_name,
+            },
         )
         await self.ws.send(auth.to_json())
         await self._emit_status("Connected")
@@ -64,11 +79,17 @@ class MessengerClient:
         assert self.ws is not None
         try:
             async for raw in self.ws:
-                env = Envelope.from_json(raw)
+                try:
+                    env = Envelope.from_json(raw)
+                except Exception as exc:
+                    self.last_error = str(exc)
+                    await self._emit_status(f"Protocol parse warning: {exc}")
+                    continue
                 await self._handle_incoming(env)
         except asyncio.CancelledError:
             return
         except Exception as exc:
+            self.last_error = str(exc)
             await self._emit_status(f"Connection error: {exc}")
 
     async def _handle_incoming(self, env: Envelope) -> None:
@@ -107,6 +128,11 @@ class MessengerClient:
                 else:
                     self.pending_peer_keys[peer_id] = peer_public
                 await self._emit_status(f"Trust[{peer_id}]={state}")
+        elif env.type == "ack":
+            known_users = env.payload.get("known_users")
+            if isinstance(known_users, dict):
+                for user_id, display_name in known_users.items():
+                    self.known_users[str(user_id)] = str(display_name)
         elif env.type == "file_offer":
             transfer_id = env.payload.get("transfer_id")
             if transfer_id:
@@ -214,4 +240,7 @@ class MessengerClient:
         if not self.ws:
             raise RuntimeError("Not connected")
         await self.ws.send(env.to_json())
+
+    def is_connected(self) -> bool:
+        return self.ws is not None
 

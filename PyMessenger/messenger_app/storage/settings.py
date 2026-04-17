@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
-DEFAULT_SETTINGS: Dict[str, str] = {
+DEFAULT_SETTINGS: Dict[str, Any] = {
     "display_name": "",
     "user_id": "",
     "server_url": "ws://127.0.0.1:8765",
+    "friends": [],
+    "rooms": ["lobby"],
 }
 
 
@@ -19,17 +21,21 @@ def settings_path() -> Path:
     return base / "profile.json"
 
 
-def load_settings() -> Dict[str, str]:
+def load_settings() -> Dict[str, Any]:
     path = settings_path()
     if not path.exists():
         return DEFAULT_SETTINGS.copy()
     data = json.loads(path.read_text(encoding="utf-8"))
     merged = DEFAULT_SETTINGS.copy()
-    merged.update({k: str(v) for k, v in data.items()})
+    for key, value in data.items():
+        if key in ("friends", "rooms") and isinstance(value, list):
+            merged[key] = [str(x) for x in value]
+        else:
+            merged[key] = str(value)
     return merged
 
 
-def save_settings(settings: Dict[str, str]) -> None:
+def save_settings(settings: Dict[str, Any]) -> None:
     path = settings_path()
     merged = DEFAULT_SETTINGS.copy()
     merged.update(settings)
