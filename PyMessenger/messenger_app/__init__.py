@@ -1,0 +1,1 @@
+"""Desktop messenger app package."""
