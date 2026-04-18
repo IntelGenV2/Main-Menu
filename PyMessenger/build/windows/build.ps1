@@ -3,13 +3,14 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$PyMessengerRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$ClientRoot = Join-Path $PyMessengerRoot "app.client"
 
-Write-Host "Installing dependencies..."
-& $Python -m pip install -r (Join-Path $ProjectRoot "requirements.txt")
+Write-Host "Installing client dependencies..."
+& $Python -m pip install -r (Join-Path $ClientRoot "requirements.txt")
 
 Write-Host "Building messenger client executable..."
-Push-Location $ProjectRoot
+Push-Location $ClientRoot
 & $Python -m PyInstaller `
     --noconfirm `
     --windowed `
@@ -18,4 +19,4 @@ Push-Location $ProjectRoot
     messenger_app/main.py
 Pop-Location
 
-Write-Host "Build complete. Output is in dist/IntelByte256/"
+Write-Host "Build complete. Output is in app.client/dist/IntelByte256/"

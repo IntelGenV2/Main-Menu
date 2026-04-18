@@ -21,10 +21,6 @@ My current focus is on the unusual OS and a game called "System Revival" which w
 9. **NO OS                                        (Lenovo M72e)**
 10. **MacOS 26                                    (MacBook M3)**
 11. **ProDOS                                      (Apple //e)**
-<<<<<<< HEAD
-
-=======
 12  **Kick Starter v2                             (Amiga 500)**
 13  **CBM                                         (Commodore 64)**
-14  **CBM                                         (Commodore VIC20** 
->>>>>>> c6069888657321d338725a65190d2b447384e169
+14  **CBM                                         (Commodore VIC20)**

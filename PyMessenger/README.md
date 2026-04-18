@@ -1,61 +1,49 @@
-# Intel Byte 256
+# Intel Byte 256 (`PyMessenger`)
 
-Intel Byte 256 is a desktop chat app with a PySide6 GUI, a lightweight signaling server, and encrypted direct messaging with TOFU key trust.
+Desktop chat **client** (PySide6) plus a separate WebSocket **signaling server**. Friends use the same Pi URL; default URL for new installs is set in **[`app.client/messenger_app/hosting.py`](app.client/messenger_app/hosting.py)** (or env `INTELBYTE256_SERVER_URL`).
 
-## How server and clients work
+## Repo layout
 
-- **Server** (`signaling_service/server.py`): message router. It helps clients find each other and pass packets. It does not manage accounts.
-- **Client** (`messenger_app/`): chat UI + your local profile/keys.
-- **Identity**: each user sets a `User ID` in setup. Friends exchange this ID.
-- **Encryption**: direct messages are encrypted end-to-end after key exchange. First key is trusted (TOFU); changed keys are flagged.
+| Path | What it is |
+|------|------------|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Why client and server are split, Pi hosting idea. |
+| [`app.client/`](app.client/) | GUI app (`messenger_app/`), `run_client.pyw`, `hosting.py`, client `requirements.txt`. |
+| [`app.server/`](app.server/) | Signaling only (`signaling_service/`), `run_server.pyw`, `requirements.txt`. |
+| [`requirements.txt`](requirements.txt) | Installs **both** app stacks (if present at repo root). |
 
-## First-time setup
+## Quick start
 
-1. Open `Intel Byte 256` (project folder currently named `PyMessenger`).
-2. Run `python -m pip install -r requirements.txt` once.
-3. Start server (for local test):
-   - `py -3 signaling_service/server.py`
-4. Start client:
-   - `py -3 -m messenger_app.main`
-5. Setup dialog appears:
-   - Enter display name
-   - Enter user ID (example: `lawbo`)
-   - Enter server URL (example local: `ws://127.0.0.1:8765`)
-6. Click `Connect`.
+**Signaling server** (e.g. on Raspberry Pi):
 
-Profile is saved in `.messenger/profile.json`, so next launch does not need terminal arguments.
+```bash
+cd app.server
+pip install -r requirements.txt
+py -3 -m signaling_service
+```
 
-## One-click launchers
+**Client** (each PC):
 
-- `run_client.pyw`: launches GUI client without terminal.
-- `run_server.pyw`: launches server without terminal.
+```bash
+cd app.client
+pip install -r requirements.txt
+py -3 -m messenger_app.main
+```
 
-Double-clicking these files works after Python and dependencies are installed.
+Windows: double-click **`app.client/run_client.pyw`** or **`app.server/run_server.pyw`**.
 
-## Add a friend and start messaging
+Server data: `app.server/.messenger/` when cwd is `app.server/`.  
+Client data: `app.client/.messenger/` when cwd is `app.client/`.
 
-1. Share your ID shown as `My ID` in the right panel.
-2. Ask your friend for their ID.
-3. In `Start Direct Chat`, enter your friend's ID and click `Add Direct`.
-4. The app auto-sends a key exchange to that friend.
-5. Your friend does the same for your ID.
-6. Start sending direct messages.
+## More documentation
 
-If trust shows `key_changed`, use `Trust Key Change` only if you verified with your friend out of band.
+- **[app.client/README.md](app.client/README.md)** — `hosting.py`, run, build EXE.
+- **[app.server/README.md](app.server/README.md)** — Pi, port forward, systemd.
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** — design overview.
 
-## Local and remote testing
+## Build Windows EXE (client only)
 
-### Local (same PC or same network)
+```powershell
+PyMessenger/build/windows/build.ps1
+```
 
-- Use server URL like `ws://127.0.0.1:8765` (same PC) or `ws://<LAN-IP>:8765` (same LAN).
-
-### Remote (different locations)
-
-- Run one signaling server on an internet-reachable host.
-- Recommended: small VPS/VM with public IP/domain.
-- Both clients set server URL to that host, e.g. `ws://your-domain-or-ip:8765`.
-
-## Build executable (Windows)
-
-- Run: `PyMessenger/build/windows/build.ps1`
-- Output: `dist/IntelByte256/`
+Output: **`app.client/dist/IntelByte256/`**
