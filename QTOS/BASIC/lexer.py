@@ -32,6 +32,9 @@ Column: 12 Category: UNSIGNEDFLOAT Lexeme: 3.45
 >>> tokenlist = lexer.tokenize('100 LET I = "HELLO"')
 >>> tokenlist[4].pretty_print()
 Column: 12 Category: STRING Lexeme: HELLO
+>>> tokenlist = lexer.tokenize('100 REM hello world')
+>>> tokenlist[1].lexeme
+'REM hello world'
 """
 
 from basictoken import BASICToken as Token
