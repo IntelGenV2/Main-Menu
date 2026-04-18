@@ -1,3 +1,0 @@
-# Full checkout: install client + server deps (e.g. one machine for dev).
--r app.client/requirements.txt
--r app.server/requirements.txt
