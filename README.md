@@ -15,7 +15,7 @@ My current focus is on the unusual OS and a game called "System Revival" which w
 3. **Windows XP                                   (Dell Vostro 200)**
 4. **System 7.1                                   (Macintosh Plus)**
 5. **MacOS 10.3                                   (iMac G3 (Tray-Loading, 333 MHz))**
-6. **Raspberrypi OS                               (Raspberry Pi 5)**
+6. **Raspberry Pi OS                              (Raspberry Pi 5)**
 7. **Tiny Basic 1.5                               (2X Arduino Nano)**
 8. **Tiny Basic GUI 1.1                           (TTGO VGA Mini32)**
 9. **NO OS                                        (Lenovo M72e)**
